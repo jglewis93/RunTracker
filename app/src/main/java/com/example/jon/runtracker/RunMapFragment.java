@@ -2,16 +2,22 @@ package com.example.jon.runtracker;
 
 import java.util.Date;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.jon.runtracker.RunDatabaseHelper.LocationCursor;
 import com.google.android.gms.maps.CameraUpdate;
@@ -20,6 +26,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -28,6 +36,7 @@ public class RunMapFragment extends SupportMapFragment implements LoaderCallback
     private static final int LOAD_LOCATIONS = 0;
     
     private GoogleMap mGoogleMap;
+    private Button newRestroom;
     private LocationCursor mLocationCursor;
 
     public static RunMapFragment newInstance(long runId) {
@@ -61,9 +70,70 @@ public class RunMapFragment extends SupportMapFragment implements LoaderCallback
         mGoogleMap = getMap();
         // show the user's location
         mGoogleMap.setMyLocationEnabled(true);
+        newRestroom = (Button)v.findViewById(R.id.new_restroom);
+        newRestroom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*AlertDialog.Builder alertTitle = new AlertDialog.Builder(this);
+
+                alertTitle.setTitle("Title");
+                alertTitle.setMessage("Message");
+
+                // Set an EditText view to get user input
+                final EditText inputTitle = new EditText(this);
+                alertTitle.setView(inputTitle);
+
+                alertTitle.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String markerTitle = inputTitle.getText().toString();
+                        // Save title to SQL database
+                    }
+                });
+
+                alertTitle.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Canceled.
+                    }
+                });
+                alertTitle.show();
+                AlertDialog.Builder alertDesc = new AlertDialog.Builder(this);
+
+                alertDesc.setTitle("Title");
+                alertDesc.setMessage("Message");
+
+                // Set an EditText view to get user input
+                final EditText inputDesc = new EditText(this);
+                alertDesc.setView(inputDesc);
+
+                alertDesc.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String markerDesc = inputDesc.getText().toString();
+                        // Save title to SQL database
+                    }
+                });
+
+                alertDesc.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Canceled.
+                    }
+                });
+                alertDesc.show();*/
+
+                LatLng bathroomPos = new LatLng(mGoogleMap.getMyLocation().getLatitude(), mGoogleMap.getMyLocation().getLongitude());
+                Marker museum = mGoogleMap.addMarker(new MarkerOptions()
+                        .position(bathroomPos)
+                        .title("Placeholder Title")
+                        .snippet("Placeholder Description")
+                        .draggable(true));
+
+
+            }
+        });
         
         return v;
     }
+
+
 
     private void updateUI() {
         if (mGoogleMap == null || mLocationCursor == null)
